@@ -6,7 +6,11 @@ from langchain_openai import OpenAIEmbeddings
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 from crewai.tools import tool
 
-DATA_PATH = "data/orders_knowledge.json"
+import os
+
+# Get absolute path to knowledge_base.json in the same folder
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+DATA_PATH = os.path.join(BASE_DIR, "knowledge_base.json")
 
 def prepare_vector_store(openai_api_key: str):
     """Loads JSON data, creates text chunks, builds embeddings, and creates FAISS index."""
