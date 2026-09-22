@@ -1,6 +1,6 @@
 import os
 import streamlit as st
-from crewai import Agent, LLM
+from crewai import Agent, LLM, Task, Crew
 from crewai.tools import tool
 
 # Page Configuration
@@ -13,7 +13,7 @@ st.set_page_config(
 st.title("🛍️ AI Customer Support Hub")
 st.caption("Powered by Single Agent CrewAI & FAISS RAG")
 
-# Helper function for Knowledge Tool
+# Helper function to create the Knowledge Tool dynamically
 def create_knowledge_tool(vector_store):
     @tool("Search Order Knowledge Base")
     def search_tool(query: str) -> str:
@@ -65,7 +65,7 @@ if user_prompt := st.chat_input("Ask about Customer ID, Order Date, Status, or A
                     api_key=api_key
                 )
 
-                # 3. Create CrewAI Support Agent
+                # 3. Create Support Agent
                 support_agent = Agent(
                     role="Customer Support Assistant",
                     goal="Provide clear, friendly, accurate information regarding order details, delivery dates, contact info, and addresses.",
@@ -75,11 +75,26 @@ if user_prompt := st.chat_input("Ask about Customer ID, Order Date, Status, or A
                     verbose=True
                 )
 
-                # Execute task
-                response = support_agent.execute_task(user_prompt)
-                
-                st.markdown(response)
-                st.session_state.messages.append({"role": "assistant", "content": str(response)})
+                # 4. Define Task
+                user_task = Task(
+                    description=user_prompt,
+                    expected_output="A helpful and accurate answer to the user's customer support question based on the vector database.",
+                    agent=support_agent
+                )
+
+                # 5. Execute via CrewAI Crew
+                crew = Crew(
+                    agents=[support_agent],
+                    tasks=[user_task],
+                    verbose=True
+                )
+
+                result = crew.kickoff()
+                response_text = str(result)
+
+                # Display response & store in history
+                st.markdown(response_text)
+                st.session_state.messages.append({"role": "assistant", "content": response_text})
 
             except Exception as e:
                 st.error(f"An error occurred while processing: {str(e)}")
