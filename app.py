@@ -104,8 +104,8 @@ if user_query := st.chat_input("Ask about Customer-ID, Order Date, Status, or Ad
                 llm = LLM(
                     model="groq/openai/gpt-oss-120b",
                     api_key=api_key,
-                    base_url="https://api.groq.com/openai/v1",
-                    cache_prompt=False
+                    
+                    
                 )
 
                 # 3. Create Single CrewAI Agent
