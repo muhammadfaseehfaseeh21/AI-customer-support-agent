@@ -1,8 +1,7 @@
 import os
 import streamlit as st
-from crewai import Agent, Task, Crew
+from crewai import Agent, LLM, Task, Crew
 from crewai.tools import tool
-from langchain_groq import ChatGroq
 
 # Page Configuration
 st.set_page_config(
@@ -35,6 +34,9 @@ if not api_key:
     st.info("Please enter your Groq API Key in the sidebar to continue.")
     st.stop()
 
+# Set environment variable for LiteLLM/CrewAI
+os.environ["GROQ_API_KEY"] = api_key
+
 # Initialize Chat History
 if "messages" not in st.session_state:
     st.session_state.messages = []
@@ -59,10 +61,10 @@ if user_prompt := st.chat_input("Ask about Customer ID, Order Date, Status, or A
                 vector_store = st.session_state.get("vector_store", None)
                 search_tool = create_knowledge_tool(vector_store)
 
-                # 2. Configure LLM using ChatGroq (Bypasses LiteLLM cache_breakpoint bug completely)
-                llm = ChatGroq(
-                    model_name="openai/gpt-oss-120b",
-                    groq_api_key=api_key
+                # 2. Configure CrewAI Native LLM for Groq
+                llm = LLM(
+                    model="groq/openai/gpt-oss-120b",
+                    api_key=api_key
                 )
 
                 # 3. Create Support Agent
