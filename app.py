@@ -44,12 +44,12 @@ CUSTOM_CSS = """
 st.markdown(CUSTOM_CSS, unsafe_allow_html=True)
 
 # Secure API Key handling via Streamlit Secrets or Sidebar Input
-api_key = st.secrets.get("OPENAI_API_KEY") if "OPENAI_API_KEY" in st.secrets else os.getenv("OPENAI_API_KEY")
+api_key = st.secrets.get("GROQ_API_KEY") if "GROQ_API_KEY" in st.secrets else os.getenv("GROQ_API_KEY")
 
 with st.sidebar:
     st.header("⚙️ Configuration")
     if not api_key:
-        api_key = st.text_input("Enter OpenAI / Open-OSS API Key:", type="password")
+        api_key = st.text_input("Enter Groq API Key:", type="password")
     
     st.markdown("---")
     st.markdown("### 📋 Quick Demo Queries")
@@ -66,14 +66,14 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 if not api_key:
-    st.warning("⚠️ Please provide an API key in Streamlit secrets or via the sidebar to start.")
+    st.warning("⚠️ Please provide a Groq API key in Streamlit secrets or via the sidebar to start.")
     st.stop()
 
-# Initialize Vector Store into Session State
+# Initialize Vector Store into Session State (No API key needed for local HuggingFace Embeddings)
 if "vector_store" not in st.session_state:
     with st.spinner("⏳ Creating Chunks & FAISS Embeddings..."):
         try:
-            st.session_state.vector_store = prepare_vector_store(api_key)
+            st.session_state.vector_store = prepare_vector_store()
             st.success("✅ Knowledge base indexed successfully!")
         except Exception as e:
             st.error(f"Error loading knowledge base: {e}")
@@ -100,9 +100,9 @@ if user_query := st.chat_input("Ask about Customer-ID, Order Date, Status, or Ad
                 # 1. Setup Retrieval Tool
                 search_tool = create_knowledge_tool(st.session_state.vector_store)
 
-                # 2. Configure LLM (Using standard OpenAI compatible endpoint/model)
+                # 2. Configure Groq LLM
                 llm = LLM(
-                    model="openai/gpt-4o-mini",  # Replace with "openai/gpt-oss-120b" or your specific provider endpoint
+                    model="groq/llama-3.3-70b-versatile",
                     api_key=api_key
                 )
 
