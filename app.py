@@ -49,7 +49,7 @@ api_key = st.secrets.get("GROQ_API_KEY") if "GROQ_API_KEY" in st.secrets else os
 with st.sidebar:
     st.header("⚙️ Configuration")
     if not api_key:
-        api_key = st.text_input("Enter Groq API Key:", type="password")
+        api_key = st.text_input("Enter API Key:", type="password")
     
     st.markdown("---")
     st.markdown("### 📋 Quick Demo Queries")
@@ -66,10 +66,10 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 if not api_key:
-    st.warning("⚠️ Please provide a Groq API key in Streamlit secrets or via the sidebar to start.")
+    st.warning("⚠️ Please provide an API key in Streamlit secrets or via the sidebar to start.")
     st.stop()
 
-# Initialize Vector Store into Session State (No API key needed for local HuggingFace Embeddings)
+# Initialize Vector Store into Session State
 if "vector_store" not in st.session_state:
     with st.spinner("⏳ Creating Chunks & FAISS Embeddings..."):
         try:
@@ -100,10 +100,11 @@ if user_query := st.chat_input("Ask about Customer-ID, Order Date, Status, or Ad
                 # 1. Setup Retrieval Tool
                 search_tool = create_knowledge_tool(st.session_state.vector_store)
 
-                # 2. Configure Groq LLM
+                # 2. Configure LLM with openai/gpt-oss-120b
                 llm = LLM(
-                    model="openai/gpt-oss-120b",
-                    api_key=api_key
+                    model="groq/openai/gpt-oss-120b",
+                    api_key=api_key,
+                    base_url="https://api.groq.com/openai/v1"
                 )
 
                 # 3. Create Single CrewAI Agent
