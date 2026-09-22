@@ -1,0 +1,29 @@
+[
+  {
+    "customer_id": "CUST-1001",
+    "order_date": "2026-03-12",
+    "contact_number": "+1-555-0192",
+    "status": "Delivered",
+    "shopping_address": "123 Elm Street, Suite 4B, Springfield, IL 62701",
+    "items": "Wireless Headphones, USB-C Cable",
+    "total_amount": "$129.99"
+  },
+  {
+    "customer_id": "CUST-1002",
+    "order_date": "2026-03-18",
+    "contact_number": "+1-555-0143",
+    "status": "In Transit",
+    "shopping_address": "456 Oak Avenue, Apt 12, Austin, TX 78701",
+    "items": "Ergonomic Keyboard",
+    "total_amount": "$89.50"
+  },
+  {
+    "customer_id": "CUST-1003",
+    "order_date": "2026-03-21",
+    "contact_number": "+1-555-0188",
+    "status": "Processing",
+    "shopping_address": "789 Pine Road, Seattle, WA 98101",
+    "items": "Smart Watch, Screen Protector",
+    "total_amount": "$210.00"
+  }
+]
