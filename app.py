@@ -102,7 +102,7 @@ if user_query := st.chat_input("Ask about Customer-ID, Order Date, Status, or Ad
 
                 # 2. Configure Groq LLM
                 llm = LLM(
-                    model="groq/llama-3.3-70b-versatile",
+                    model="openai/gpt-oss-120b",
                     api_key=api_key
                 )
 
