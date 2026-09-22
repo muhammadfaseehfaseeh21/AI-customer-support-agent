@@ -58,10 +58,9 @@ if user_prompt := st.chat_input("Ask about Customer ID, Order Date, Status, or A
                 vector_store = st.session_state.get("vector_store", None)
                 search_tool = create_knowledge_tool(vector_store)
 
-                # 2. Configure LLM for Groq
+                # 2. Configure LLM for Groq with YOUR MODEL
                 llm = LLM(
-                    model="llama-3.3-70b-versatile",
-                    provider="groq",
+                    model="groq/openai/gpt-oss-120b",
                     api_key=api_key
                 )
 
